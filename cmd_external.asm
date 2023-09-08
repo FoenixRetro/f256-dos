@@ -33,7 +33,8 @@ cmd
             stz     success
 
           ; Set the drive
-            lda     drive
+            lda     #0
+            jsr     readline.parse_drive
             sta     kernel.args.file.open.drive
 
           ; Set the filename (conveniently aligned)
