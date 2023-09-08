@@ -46,6 +46,7 @@ write       .null   "write"
 dump        .null   "dump" 
 basic       .null   "basic"  
 rename      .null   "rename"   
+cp          .null   "cp"   
 rm          .null   "rm"     
 del         .null   "del"     
 delete      .null   "delete"     
@@ -67,6 +68,7 @@ commands
             .word   words.dump,     dump.cmd
             .word   words.basic,    dos.basic
             .word   words.rename,   rename.cmd
+            .word   words.cp,       copy.cmd
             .word   words.rm,       delete.cmd
             .word   words.del,      delete.cmd
             .word   words.delete,   delete.cmd
@@ -166,6 +168,7 @@ _msg
             .text   "rm     <fname>      Delete <fname>.", $0a
             .text   "del    <fname>      Delete <fname>.", $0a
             .text   "rename <old> <new>  Rename <old> to <new>.", $0a
+            .text   "cp     <old> <new>  Copy <old> to <new>.", $0a
             .text   "delete <fname>      Delete <fname>.", $0a
             .text   "mkfs   <label>      Creates a new filesystem on the device.", $0a
             .text   "basic               Starts SuperBASIC.", $0a

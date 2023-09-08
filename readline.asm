@@ -191,7 +191,7 @@ _done
             ply
             rts
 
-populate_arguments:
+populate_arguments
           ; Populate argv array
             ldx     #0
             ldy     #0
@@ -297,35 +297,34 @@ _out
             plx
             rts
             
+
 parse_drive
 	; IN: A = token#
-			tax
+            tax
 
           ; Make sure we have an argument
-            lda     token_count
-            cmp     #2
-            bcc     _default
+            cmp     token_count
+            bge     _default
             
           ; Make sure it's at least 2 characters
-            txa
             jsr     token_length
             cmp     #2
             bcc     _default
             
           ; Consider only <drive><colon> prefixen
-            ldy     readline.tokens+1
+            ldy     tokens,x
             lda     buf+1,y
             cmp     #':'
             bne     _default
+            
+          ; Remove the drive spec from the token
+            inc     tokens,x
+            inc     tokens,x
             
           ; Consider the first character a drive;
           ; other layers can check if it's valid
             lda     buf,y
             and     #7
-            
-          ; Remove the drive spec from the token
-            inc     tokens+1
-            inc     tokens+1
             
             rts
             
