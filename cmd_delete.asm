@@ -12,7 +12,8 @@ cmd
             bne     _done
 
           ; Set the drive
-            lda     drive
+            lda     #1
+            jsr     readline.parse_drive
             sta     kernel.args.file.open.drive
 
           ; Set the filename pointer (it's conveniently aligned)
