@@ -8,10 +8,14 @@
             .byte       1               ; 1 block
             .byte       5               ; mount at $a000
             .word       dos.start       ; Start here
-            .word       0               ; version
-            .word       0               ; kernel
-            .text       "DOS",0  ; Still acting as SuperBASIC's header
-            
+            .byte       1               ; structure version
+            .byte       0               ; reserved
+            .byte       0               ; reserved
+            .byte       0               ; reserved
+            .text       "dos",0         ; program name
+            .text       0               ; arguments
+            .text       "Simple commandline shell.",0 ; description
+
 hello
             ldy     #0
 _loop
@@ -59,15 +63,6 @@ start
         ; display a splash screen, etc.  For now,
         ; we'll keep it simple.
 
-.if false
-          ; If dip1 is off, start SuperBASIC
-            stz     io_ctrl
-            lda     $d670   ; Read Jr dip switch register.
-            eor     #$ff    ; Values are inverted.
-            bit     #1
-            bne     _shell
-            jmp     basic
-.endif        
 _shell
           ; Start the shell
             jsr     kernel.Display.Reset
@@ -91,16 +86,6 @@ welcome
 
 _msg        .text   "Foenix F256 DOS Shell (", DATE_STR, ")", $0a, $0a, 0
             
-
-basic
-            lda     #<_basic
-            sta     kernel.args.buf+0
-            lda     #>_basic
-            sta     kernel.args.buf+1
-            jsr     kernel.RunNamed
-            sec
-            rts
-_basic      .null   "SuperBASIC"
 
             .send
             .endn        

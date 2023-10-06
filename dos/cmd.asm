@@ -44,7 +44,6 @@ dir         .null   "dir"
 read        .null   "read"
 write       .null   "write"  
 dump        .null   "dump" 
-basic       .null   "basic"  
 rename      .null   "rename"   
 cp          .null   "cp"   
 rm          .null   "rm"     
@@ -59,14 +58,13 @@ wifi        .null   "wifi"
             .endn
 
 commands
-            .word   words.help,     help
+            .word   words.help,     help.cmd
             .word   words.about,    about
             .word   words.ls,       dir.cmd
             .word   words.dir,      dir.cmd
             .word   words.read,     read.cmd
             .word   words.write,    write.cmd
             .word   words.dump,     dump.cmd
-            .word   words.basic,    dos.basic
             .word   words.rename,   rename.cmd
             .word   words.cp,       copy.cmd
             .word   words.rm,       delete.cmd
@@ -139,45 +137,6 @@ _msg
             .text   "Simple DOS Shell, built ", DATE_STR, $0a
             .byte   $0
             
-
-help
-            lda     #<_msg
-            sta     tmp+0
-            lda     #>_msg
-            sta     tmp+1
-            phy
-            ldy     #0
-_loop       lda     (tmp),y
-            beq     _done
-            jsr     putc
-            iny
-            bne     _loop
-            inc     tmp+1
-            bra     _loop
-_done
-            ply
-            rts        
-_msg
-            .byte   $0a
-            .text   "<digit>:            Change drive.", $0a
-            .text   "ls                  Shows the directory.",$0a
-            .text   "dir                 Shows the directory.",$0a
-            .text   "read   <fname>      Prints the contents of <fname>.", $0a
-            .text   "write  <fname>      Writes user input to <fname>.", $0a
-            .text   "dump   <fname>      Hex-dumps <fname>.", $0a
-            .text   "rm     <fname>      Delete <fname>.", $0a
-            .text   "del    <fname>      Delete <fname>.", $0a
-            .text   "rename <old> <new>  Rename <old> to <new>.", $0a
-            .text   "cp     <old> <new>  Copy <old> to <new>.", $0a
-            .text   "delete <fname>      Delete <fname>.", $0a
-            .text   "mkfs   <label>      Creates a new filesystem on the device.", $0a
-            .text   "basic               Starts SuperBASIC.", $0a
-            .text   "keys                Demonstrates key status tracking.", $0a
-            .text   "exec   <$hex>       JSR to a program in memory (try $a015).", $0a
-            .text   "help                Prints this text.", $0a
-            .text   "about               Information about the software and hardware.", $0a
-            .text   "wifi <ssid> <pass>  Configures the wifi access point.", $0a
-            .byte   $0
 
 start
           ; Tell the event call where to dump events.

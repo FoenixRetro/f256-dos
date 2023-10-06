@@ -15,6 +15,7 @@ DOS	= \
 	dos/cmd_wifi.asm \
 	dos/cmd_external.asm \
 	dos/cmd_copy.asm \
+	dos/cmd_help.asm \
 	dos/strings.asm \
 	dos/display.asm \
 	dos/readline.asm \

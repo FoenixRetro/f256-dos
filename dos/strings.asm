@@ -28,7 +28,7 @@ puts_cr
             jmp     put_cr
 
 puts_zero
-        ; Input - XA string            
+        ; Input - AX string            
             phx
             phy
 
@@ -37,10 +37,12 @@ puts_zero
 
             ldy     #0
 _loop
-            lda     (strings.str),y
+            lda     (strings.str)
             beq     _done
             jsr     putc
-            iny
+            inc     strings.str
+            bne     _loop
+            inc     strings.str+1
             bra     _loop
 _done
             ply
