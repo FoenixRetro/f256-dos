@@ -51,7 +51,6 @@ del         .null   "del"
 delete      .null   "delete"     
 mkfs        .null   "mkfs"
 keys        .null   "keys"
-exec        .null   "exec"
 mkdir       .null   "mkdir"     
 rmdir       .null   "rmdir"     
 wifi        .null   "wifi"
@@ -72,7 +71,6 @@ commands
             .word   words.delete,   delete.cmd
             .word   words.mkfs,     mkfs.cmd
             .word   words.keys,     keys.cmd
-            .word   words.exec,     exec.cmd
             .word   words.mkdir,    mkdir.cmd
             .word   words.rmdir,    rmdir.cmd
             .word   words.wifi,     wifi.cmd
@@ -269,10 +267,18 @@ set_prompt
             rts
 
 dispatch
+            ldy     readline.tokens+0   ; offset of token zero.
+            lda     readline.buf,y
+            cmp     #'/'
+            bne     _check_internal
+            inc     readline.tokens+0
+            bra     _check_user_program
+
+_check_internal
             ldx     #0
 _cmd
             lda     commands,x
-            beq     _fail
+            beq     _check_user_program
             inx
             inx        
 
@@ -285,12 +291,14 @@ _next
             inx
             inx
             bra     _cmd
-_fail
+
+_check_user_program
           ; Set up argument array for user programs
             jsr     readline.populate_arguments
-.if true
+
           ; See if it's the name of a binary
-            stz     kernel.args.buf+0
+            lda     readline.tokens+0
+            sta     kernel.args.buf+0
             lda     #>readline.buf
             sta     kernel.args.buf+1
             lda     #0
@@ -299,14 +307,13 @@ _fail
             lda     #0
             sta     (kernel.args.buf),y
             jsr     kernel.RunNamed
-.endif
-.if true
+
           ; Try to load an external user program on disk, kernel.args.buf is already initialized
             jsr     external.cmd
             bcs     _unknown_cmd
             rts
 _unknown_cmd
-.endif
+
           ; If the chain failed, unknown command.
             lda     #unknown_str
             jsr     strings.puts

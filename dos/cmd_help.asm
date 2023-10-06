@@ -102,7 +102,7 @@ _not_kup
             ply
             rts
 
-            ; skip to column number i A
+            ; skip to column number in A
 _skip_to_column
             tay
             dey
@@ -126,12 +126,11 @@ _msg
             .text   "dump   <fname>      Hex-dumps <fname>.", $0a
             .text   "rm     <fname>      Delete <fname>.", $0a
             .text   "del    <fname>      Delete <fname>.", $0a
+            .text   "delete <fname>      Delete <fname>.", $0a
             .text   "rename <old> <new>  Rename <old> to <new>.", $0a
             .text   "cp     <old> <new>  Copy <old> to <new>.", $0a
-            .text   "delete <fname>      Delete <fname>.", $0a
             .text   "mkfs   <label>      Creates a new filesystem on the device.", $0a
             .text   "keys                Demonstrates key status tracking.", $0a
-            .text   "exec   <$hex>       JSR to a program in memory (try $a015).", $0a
             .text   "help                Prints this text.", $0a
             .text   "about               Information about the software and hardware.", $0a
             .text   "wifi <ssid> <pass>  Configures the wifi access point.", $0a

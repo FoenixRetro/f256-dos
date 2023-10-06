@@ -11,7 +11,6 @@ DOS	= \
 	dos/cmd_mkdir.asm \
 	dos/cmd_rmdir.asm \
 	dos/cmd_keys.asm \
- 	dos/cmd_exec.asm \
 	dos/cmd_wifi.asm \
 	dos/cmd_external.asm \
 	dos/cmd_copy.asm \
