@@ -229,11 +229,23 @@ _loop
             cpy     length
             bcs     _done
 
+            lda     buf,y
+            cmp     #'"'
+            bne     _not_quoted
+
+            iny
             tya
             sta     tokens,x
-            inx
+            jsr     skip_to_quote
+            bra     _continue_next_token
 
-            jsr     skip_token
+_not_quoted
+            tya
+            sta     tokens,x
+            jsr     skip_to_white
+
+_continue_next_token
+            inx
             cpy     length
             bcs     _done
 
@@ -260,14 +272,25 @@ skip_white
 _done
             rts            
 
-skip_token
+skip_to_white
             cpy     length
             bcs     _done
             lda     buf,y
             cmp     #' '
             beq     _done
             iny
-            bra     skip_token
+            bra     skip_to_white
+_done
+            rts            
+
+skip_to_quote
+            cpy     length
+            bcs     _done
+            lda     buf,y
+            cmp     #'"'
+            beq     _done
+            iny
+            bra     skip_to_quote
 _done
             rts            
 
@@ -295,6 +318,7 @@ _done
 _out                        
             ply
             plx
+            cmp     #0
             rts
             
 

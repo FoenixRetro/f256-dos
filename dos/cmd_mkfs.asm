@@ -13,7 +13,7 @@ cmd
 
           ; Set the drive
             lda     drive
-            sta     kernel.args.file.open.drive
+            sta     kernel.args.fs.mkfs.drive
 
           ; Set the filename pointer (it's conveniently aligned)
             lda     readline.tokens+1
