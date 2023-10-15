@@ -243,7 +243,10 @@ _done
 
 prompt
             jsr     set_prompt
-            
+
+            lda     #$24
+            sta     display.color
+
             ldy     #0
 _loop
             lda     prompt_str,y
@@ -254,6 +257,10 @@ _loop
 _done
             sty     prompt_len
             sty     eol
+
+            lda     #$14
+            sta     display.color
+
             rts
              
 set_prompt
