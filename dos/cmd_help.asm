@@ -2,9 +2,8 @@
 
 help        .namespace
 
-            .section    dp
-column      .byte       ?
-            .send            
+            .mkstr  doshdr,x"0A".."DOS commands:"
+            .mkstr  flashhdr,"Flash resident programs:"
 
             .section    code
 
@@ -12,9 +11,15 @@ cmd
             phx
             phy
 
+            lda     #doshdr_str
+            jsr     puts_hdr
+
             lda     #>_msg
             ldx     #<_msg
             jsr     strings.puts_zero
+
+            lda     #flashhdr_str
+            jsr     puts_hdr
 
             lda     #$B3    ; edit and activate #3
             sta     $00
@@ -46,8 +51,6 @@ _print_next jsr     _print_program
             rts
 
 _print_program
-            stz     column
-
             ; check if program
             phy
             lda     $2000
@@ -58,19 +61,36 @@ _print_program
             bne     _not_kup
 
             ; print name
+            lda     $09
+            sec
+            sbc     #$40
+            jsr     display.print_hex
+            lda     $2002
+            cmp     #2
+            blt     _one_block
+            lda     #"-"
+            jsr     putc
+            lda     $09
+            clc
+            adc     $2002
+            sbc     #$40
+            jsr     display.print_hex
+_one_block  lda     #6
+            jsr     _skip_to_column
+
             ldx     #0
 _print_name lda     $200A,x
             beq     _name_done
             jsr     putc
             inx
             bra     _print_name
-_name_done  stx     column
+_name_done
 
             ; is header version >= 1?
             lda     $2006
             beq     _no_info
 
-            lda     #7
+            lda     #13
             jsr     _skip_to_column
 
             ; found info at $200B+X
@@ -80,10 +100,9 @@ _print_arg_char
             beq     _print_arg_done
             jsr     putc
             inx
-            inc     column
             bra     _print_arg_char
 _print_arg_done
-            lda     #20
+            lda     #24
             jsr     _skip_to_column
 
             ; print description string
@@ -107,17 +126,15 @@ _skip_to_column
             tay
             dey
 _skip_to_next_column
-            cpy     column
+            cpy     display.cursor
             blt     _column_skip_done
             lda     #' '
             jsr     putc
-            inc     column
             bra     _skip_to_next_column
 _column_skip_done
             rts
 
 _msg
-            .byte   $0a
             .text   "<digit>:            Change drive.", $0a
             .text   "ls                  Shows the directory.",$0a
             .text   "dir                 Shows the directory.",$0a
@@ -135,8 +152,8 @@ _msg
             .text   "about               Information about the software and hardware.", $0a
             .text   "wifi <ssid> <pass>  Configures the wifi access point.", $0a
             .text   $0a
-            .text   "Flash resident programs:", $0a
             .byte   $0
+
 
 
             .send

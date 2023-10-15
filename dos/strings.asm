@@ -13,6 +13,7 @@ mkstr       .segment   label, data
             .section    code
 puts        jmp     strings.puts
 puts_cr     jmp     strings.puts_cr
+puts_hdr    jmp     strings.puts_headline
             .send
 
 strings     .namespace
@@ -22,6 +23,23 @@ str         .word       ?
             .send            
 
             .section    code
+
+puts_headline
+            phx
+            ldx     display.color
+            phx
+            pha
+            
+            lda     #$24
+            sta     display.color
+
+            pla
+            jsr     puts_cr
+
+            plx
+            stx     display.color
+            plx
+            rts
 
 puts_cr
             jsr     puts

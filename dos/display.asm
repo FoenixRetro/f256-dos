@@ -120,6 +120,11 @@ _ascii
         sty     io_ctrl
         ldy     cursor
         sta     (screen),y
+        lda     color
+        ldy     #3
+        sty     io_ctrl
+        ldy     cursor
+        sta     (screen),y
         iny
         cpy     #80
         beq     _cr
@@ -142,6 +147,7 @@ _scroll
         lda     #2
         sta     io_ctrl
 
+_scroll_next
         lda     #$c0
         sta     src+1
         sta     dest+1
@@ -149,26 +155,51 @@ _scroll
         lda     #80
         sta     src+0
 
-        phx
-        ldx     #21
+        ; We're copying a lot, partially unrolled loop
+        ldx     #MAX_LINE
 _y      ldy     #0
-_loop   lda     (src),y
+_loop 
+        .rept   16
+        lda     (src),y
         sta     (dest),y
         iny
-        cpy     #240
+        .endrept
+        cpy     #80
         bne     _loop
 
-        ldy     #src
-        lda     #240
-        jsr     add
-        ldy     #dest
-        lda     #240
-        jsr     add
+        lda     src
+        sta     dest
+        clc
+        adc     #80
+        sta     src
+        lda     src+1
+        sta     dest+1
+        adc     #0
+        sta     src+1
 
         dex
         bne     _y
-        plx
-        
+
+        ; clear last line
+
+        lda     io_ctrl
+        cmp     #3
+        beq     _scroll_done
+        inc     io_ctrl
+        jmp     _scroll_next
+_scroll_done
+
+        lda     display.color
+        jsr     _clear_last
+        dec     io_ctrl
+        lda     #' '
+        ; fall through to _clear_last subroutine
+_clear_last
+        ldy     #80
+_clear_loop
+        sta     $c000+80*59-1,y
+        dey     
+        bne     _clear_loop
         rts
 
 add
@@ -193,7 +224,7 @@ cls
 
         lda     #3
         sta     io_ctrl
-        lda     #$14
+        lda     color
         jsr     fill_screen
         
         stz     io_ctrl
@@ -237,15 +268,21 @@ purple
         stz     io_ctrl
         phx
         ldx     #0
-_loop   lda     _purple,x
-        sta     TEXT_LUT_BG+4*4,x
+_loop   lda     _palette,x
+        sta     TEXT_LUT_FG,x
+        sta     TEXT_LUT_BG,x
         inx
-        cpx     #4
+        cpx     #_palette_end-_palette
         bne     _loop
         plx
         rts        
-_purple .dword  $3a003a, $600070
-
+_palette
+        .dword  $000000
+        .dword  $ffffff
+        .dword  $44cccc
+        .dword  $000000
+        .dword  $3a003a
+_palette_end
             .send
             .endn
 

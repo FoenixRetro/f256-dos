@@ -317,7 +317,9 @@ _unknown_cmd
           ; If the chain failed, unknown command.
             lda     #unknown_str
             jsr     strings.puts
-            jmp     put_cr
+            jsr     put_cr
+            clc
+            rts
         
 _cmp
     ; a->offset in words
