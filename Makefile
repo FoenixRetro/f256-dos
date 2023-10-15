@@ -2,6 +2,7 @@ DOS	= \
 	dos/dos.asm \
 	dos/cmd.asm \
 	dos/cmd_dir.asm \
+	dos/cmd_lsf.asm \
 	dos/cmd_read.asm \
 	dos/cmd_write.asm \
 	dos/cmd_dump.asm \

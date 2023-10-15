@@ -41,6 +41,7 @@ help        .null   "help"
 about       .null   "about"
 ls          .null   "ls"
 dir         .null   "dir"
+lsf         .null   "lsf"
 read        .null   "read"
 write       .null   "write"  
 dump        .null   "dump" 
@@ -61,6 +62,7 @@ commands
             .word   words.about,    about
             .word   words.ls,       dir.cmd
             .word   words.dir,      dir.cmd
+            .word   words.lsf,      lsf.cmd
             .word   words.read,     read.cmd
             .word   words.write,    write.cmd
             .word   words.dump,     dump.cmd
