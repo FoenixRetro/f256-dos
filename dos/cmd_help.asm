@@ -19,6 +19,7 @@ cmd
 
             ply
             plx
+            clc
             rts        
 
 _msg

@@ -2,7 +2,7 @@
 
 keys        .namespace
 
-            .mkstr      desc,  "This program shows the held status of keys.  Press <ENTER> to quite."
+            .mkstr      desc,  "This program shows the held status of keys.  Press <ENTER> to quit."
 
             .section    code
 

@@ -58,7 +58,9 @@ _loop
             jsr     _dispatch
             bra     _loop
 _done
-            jmp     put_cr
+            jsr     put_cr
+            clc
+            rts
 _error
             sec
             rts     

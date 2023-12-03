@@ -33,6 +33,7 @@ print
             lda     #WIDTH
             sta     count
 _done
+            clc
             rts
 
 print_space

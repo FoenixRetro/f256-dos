@@ -74,7 +74,9 @@ _error
             sec
             rts
 _done
-            jmp     put_cr
+            jsr     put_cr
+            clc
+            rts
 
 _dispatch
             cmp     #kernel.event.file.OPENED

@@ -82,8 +82,9 @@ _loop
             bra     _loop
             
 _closed
+            jsr     put_cr
             clc
-            jmp     put_cr
+            rts
 
 _dispatch
             cmp     #kernel.event.directory.OPENED

@@ -60,7 +60,9 @@ _loop
             
             bra     _loop
 _done
-            jmp     put_cr
+            jsr     put_cr
+            clc
+            rts
 _error
         ; The command loop will see that carry is set,
         ; and print the error message.

@@ -34,6 +34,7 @@ cmd
 
             ply
             plx
+            clc
             rts        
 
 _print_next jsr     _print_program
